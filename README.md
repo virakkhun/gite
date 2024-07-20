@@ -3,7 +3,7 @@
 is an minimal router for create API.
 allowing for group routing, and others http verbs.
 
-```go
+```ts
 package main
 
 import (
@@ -38,22 +38,19 @@ func main() {
 		log.Fatal(err.Error())
 	}
 }
-// grouping
-	router := gite.GiteRouter(mux)
-  user := router.Group("/user")
 
-	user.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("content-type", "application/json")
-		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(
-			map[string]any{
-				"username": "@johndoe",
-        "Age": 20,
-			},
-		)
-	})
-  user.Post("/", handler)
-  user.Put("/{id}", handler)
-  user.Patch("/{id}", handler)
-  user.Delete("/{id}", handler)
+// grouping
+router := gite.GiteRouter(mux)
+user := router.Group("/user")
+
+user.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("content-type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(
+		map[string]any{
+			"username": "@johndoe",
+      "Age": 20,
+		},
+	)
+})
 ```
