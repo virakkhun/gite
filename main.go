@@ -23,6 +23,20 @@ func main() {
 		)
 	})
 
+	// grouping
+	user := router.Group("/user")
+
+	user.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("content-type", "application/json")
+		w.WriteHeader(200)
+		json.NewEncoder(w).Encode(
+			map[string]any{
+				"username": "@johndoe",
+				"Age":      20,
+			},
+		)
+	})
+
 	err := http.ListenAndServe(PORT, mux)
 	if err != nil {
 		log.Fatal(err.Error())
