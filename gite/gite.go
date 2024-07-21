@@ -8,7 +8,7 @@ func handler(mux *http.ServeMux, path string, handlers ...http.HandlerFunc) {
 	}
 }
 
-func GiteRouter(mux *http.ServeMux) Router {
+func NewRouter(mux *http.ServeMux) Router {
 	return Router{
 		Get: func(path string, handlers ...http.HandlerFunc) {
 			p := buildPath(HttpVerb.GET, path)
@@ -31,7 +31,7 @@ func GiteRouter(mux *http.ServeMux) Router {
 			handler(mux, p, handlers...)
 		},
 		Group: func(prefix string) Router {
-			router := GiteRouter(mux)
+			router := NewRouter(mux)
 			return Router{
 				Get: func(path string, handlers ...http.HandlerFunc) {
 					p := buildGroupPath(prefix, path)
@@ -54,7 +54,7 @@ func GiteRouter(mux *http.ServeMux) Router {
 					router.Post(p, handlers...)
 				},
 				Group: func(prefix string) Router {
-					router := GiteRouter(mux)
+					router := NewRouter(mux)
 					return router.Group(prefix)
 				},
 			}

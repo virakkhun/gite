@@ -11,7 +11,7 @@ func main() {
 	PORT := ":3000"
 	mux := http.NewServeMux()
 
-	router := gite.GiteRouter(mux)
+	router := gite.NewRouter(mux)
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("content-type", "application/json")

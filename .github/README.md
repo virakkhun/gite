@@ -1,7 +1,6 @@
 # gite
 
-is an minimal router for create API.
-allowing for group routing, and others http verbs.
+is an minimal router for create API. allowing for group routing, and others http verbs.
 
 ```go
 package main
