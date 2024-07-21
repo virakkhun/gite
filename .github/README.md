@@ -5,9 +5,13 @@
 - support route grouping
 - middleware ??
 
-### basic routing
+#### prerequisite
 
-```ts
+- go 1.22.5
+
+#### basic routing
+
+```go
 package main
 
 import (
