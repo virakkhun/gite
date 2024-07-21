@@ -1,8 +1,13 @@
 # gite
 
-is an minimal router for create API. allowing for group routing, and others http verbs.
+- is an minimal go router for create API.
+- providing raw handler from net/http
+- support route grouping
+- middleware ??
 
-```go
+### basic routing
+
+```ts
 package main
 
 import (
@@ -16,7 +21,7 @@ func main() {
 	PORT := ":3000"
 	mux := http.NewServeMux()
 
-	router := gite.GiteRouter(mux)
+	router := gite.NewRouter(mux)
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("content-type", "application/json")
