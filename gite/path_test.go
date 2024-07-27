@@ -29,8 +29,8 @@ func TestBuildPath(t *testing.T) {
 }
 
 func TestBuildGroupPath(t *testing.T) {
-	get := &buildPathConfig{method: GET, prefix: "/user", path: "/"}
-	expected := "GET /user/"
+	get := &buildPathConfig{prefix: "/user", path: "/"}
+	expected := "/user/"
 	result := get.buildGroup()
 
 	if result != expected {
@@ -39,8 +39,8 @@ func TestBuildGroupPath(t *testing.T) {
 
 	t.Logf(`build group %v success`, result)
 
-	post := &buildPathConfig{method: POST, prefix: "/user"}
-	postExpected := "POST /user/"
+	post := &buildPathConfig{prefix: "/user"}
+	postExpected := "/user/"
 	postResult := post.buildGroup()
 
 	if postExpected != postResult {
@@ -49,8 +49,8 @@ func TestBuildGroupPath(t *testing.T) {
 
 	t.Logf(`build group %v success`, postResult)
 
-	put := &buildPathConfig{method: POST, prefix: "/user", path: "/{id}"}
-	putExpected := "POST /user/{id}"
+	put := &buildPathConfig{prefix: "/user", path: "/{id}"}
+	putExpected := "/user/{id}"
 	putResult := put.buildGroup()
 
 	if putExpected != putResult {
