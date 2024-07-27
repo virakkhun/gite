@@ -23,20 +23,22 @@ import (
 
 func main() {
 	mux := http.NewServeMux()
-	router := gite.NewRouter(mux)
+	router := gite.New(mux)
 
-	var myMiddleWare gite.HanlderFunc = func(ctx gite.Ctx) {
-		if ctx.Request.URL.Path == "/hello" {
+	router.Get("/", func(ctx gite.Ctx) {
+		json.NewEncoder(ctx.Response).Encode("Hello")
+	})
+
+	user := router.Group("/user")
+	user.Get("/", func(ctx gite.Ctx) {
+		if ctx.Request.URL.Path == "/user/detail" {
 			http.NotFound(ctx.Response, ctx.Request)
 			return
 		}
 
 		ctx.NextFunc()
-	}
-
-	router.Get("/", myMiddleWare, func(ctx gite.Ctx) {
-		ctx.Response.WriteHeader(http.StatusCreated)
-		fmt.Fprint(ctx.Response, "Hello world")
+	}, func(ctx gite.Ctx) {
+		json.NewEncoder(ctx.Response).Encode("World")
 	})
 
 	log.Fatal(http.ListenAndServe(":3000", mux))
