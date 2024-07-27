@@ -3,7 +3,7 @@
 - is an minimal go router for create API.
 - providing raw handler from net/http
 - support route grouping
-- middleware ??
+- support middleware
 
 #### prerequisite
 
@@ -22,38 +22,23 @@ import (
 )
 
 func main() {
-	PORT := ":3000"
 	mux := http.NewServeMux()
-
 	router := gite.NewRouter(mux)
 
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("content-type", "application/json")
-		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(
-			map[string]string{
-				"Hello": "World",
-			},
-		)
-	})
+	var myMiddleWare gite.HanlderFunc = func(ctx gite.Ctx) {
+		if ctx.Request.URL.Path == "/hello" {
+			http.NotFound(ctx.Response, ctx.Request)
+			return
+		}
 
-	// grouping
-	user := router.Group("/user")
-
-	user.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("content-type", "application/json")
-		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(
-			map[string]any{
-				"username": "@johndoe",
-				"Age":      20,
-			},
-		)
-	})
-
-	err := http.ListenAndServe(PORT, mux)
-	if err != nil {
-		log.Fatal(err.Error())
+		ctx.NextFunc()
 	}
+
+	router.Get("/", myMiddleWare, func(ctx gite.Ctx) {
+		ctx.Response.WriteHeader(http.StatusCreated)
+		fmt.Fprint(ctx.Response, "Hello world")
+	})
+
+	log.Fatal(http.ListenAndServe(":3000", mux))
 }
 ```
