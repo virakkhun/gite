@@ -1,39 +1,61 @@
 package gite
 
 import (
-	"strings"
 	"testing"
 )
 
 func TestBuildPath(t *testing.T) {
-	get := buildPath(HttpVerb.GET, "/")
+	get := &buildPathConfig{method: GET}
+	result := get.build()
 
-	if strings.Compare(get, "GET /") != 0 {
+	if result != "GET /" {
 		t.Fatal(`failed to build GET /`)
 	}
-	t.Log(`Results: `, get)
+	t.Logf(`build %v success`, result)
 
-	post := buildPath(HttpVerb.POST, "/")
-	if strings.Compare(post, "POST /") != 0 {
+	post := &buildPathConfig{method: POST}
+	postResult := post.build()
+	if postResult != "POST /" {
 		t.Fatal(`failed to build POST /`)
 	}
-	t.Log(`Results: `, post)
+	t.Logf(`build %v success`, postResult)
 
-	put := buildPath(HttpVerb.PUT, "/")
-	if strings.Compare(put, "PUT /") != 0 {
-		t.Fatal(`failed to build PUT /`)
-	}
-	t.Log(`Results: `, put)
-
-	patch := buildPath(HttpVerb.PATCH, "/")
-	if strings.Compare(patch, "PATCH /") != 0 {
+	patch := &buildPathConfig{method: PATCH, path: "/{userId}"}
+	patchResult := patch.build()
+	if patchResult != "PATCH /{userId}" {
 		t.Fatal(`failed to build PATCH /`)
 	}
-	t.Log(`Results: `, patch)
+	t.Logf(`build %v success`, patchResult)
+}
 
-	del := buildPath(HttpVerb.DELETE, "/")
-	if strings.Compare(del, "DELETE /") != 0 {
-		t.Fatal(`failed to build DELETE /`)
+func TestBuildGroupPath(t *testing.T) {
+	get := &buildPathConfig{method: GET, prefix: "/user", path: "/"}
+	expected := "GET /user/"
+	result := get.buildGroup()
+
+	if result != expected {
+		t.Fatalf("failed to build group GET /user/")
 	}
-	t.Log(`Results: `, del)
+
+	t.Logf(`build group %v success`, result)
+
+	post := &buildPathConfig{method: POST, prefix: "/user"}
+	postExpected := "POST /user/"
+	postResult := post.buildGroup()
+
+	if postExpected != postResult {
+		t.Fatalf("failed to build group GET /user/")
+	}
+
+	t.Logf(`build group %v success`, postResult)
+
+	put := &buildPathConfig{method: POST, prefix: "/user", path: "/{id}"}
+	putExpected := "POST /user/{id}"
+	putResult := put.buildGroup()
+
+	if putExpected != putResult {
+		t.Fatalf("failed to build group GET /user/")
+	}
+
+	t.Logf(`build group %v success`, putResult)
 }
