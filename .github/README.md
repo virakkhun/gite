@@ -22,14 +22,19 @@ import (
 )
 
 func main() {
-	mux := http.NewServeMux()
-	router := gite.New(mux)
-
-	router.Get("/", func(ctx gite.Ctx) {
-		json.NewEncoder(ctx.Response).Encode("Hello")
+	app := gite.New(&gite.Config{
+		Port:    "3000",
+		Logging: true,
+		OnServe: func(port string) {
+			fmt.Printf("Server is listening on port %v\n", port)
+		},
 	})
 
-	user := router.Group("/user")
+	app.Get("/", func(ctx gite.Ctx) {
+		ctx.Json("Hello World")
+	})
+
+	user := app.Group("/user")
 	user.Get("/", func(ctx gite.Ctx) {
 		if ctx.Request.URL.Path == "/user/detail" {
 			http.NotFound(ctx.Response, ctx.Request)
@@ -38,9 +43,9 @@ func main() {
 
 		ctx.NextFunc()
 	}, func(ctx gite.Ctx) {
-		json.NewEncoder(ctx.Response).Encode("World")
+		ctx.Status(http.StatusOK).Text("Hello bro")
 	})
 
-	log.Fatal(http.ListenAndServe(":3000", mux))
+	log.Fatal(app.Serve())
 }
 ```

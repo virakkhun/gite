@@ -2,10 +2,13 @@ package gite
 
 import (
 	"net/http"
+	"time"
 )
 
 type Server struct {
-	mux *http.ServeMux
+	mux    *http.ServeMux
+	config Config
+	ready  bool
 }
 
 type Router interface {
@@ -17,32 +20,40 @@ type Router interface {
 	Group(prefix string) Router
 }
 
-func (s Server) Get(path string, hanlders ...HanlderFunc) {
+func (s *Server) Get(path string, hanlders ...HanlderFunc) {
 	p := &buildPathConfig{method: GET, path: path}
-	registerHandlers(s.mux, p.build(), hanlders...)
+	s.registerHandlers(p.build(), hanlders...)
 }
 
-func (s Server) Post(path string, handlers ...HanlderFunc) {
+func (s *Server) Post(path string, handlers ...HanlderFunc) {
 	p := &buildPathConfig{method: POST, path: path}
-	registerHandlers(s.mux, p.build(), handlers...)
+	s.registerHandlers(p.build(), handlers...)
 }
 
-func (s Server) Put(path string, handlers ...HanlderFunc) {
+func (s *Server) Put(path string, handlers ...HanlderFunc) {
 	p := &buildPathConfig{method: PUT, path: path}
-	registerHandlers(s.mux, p.build(), handlers...)
+	s.registerHandlers(p.build(), handlers...)
 }
 
-func (s Server) Patch(path string, handlers ...HanlderFunc) {
+func (s *Server) Patch(path string, handlers ...HanlderFunc) {
 	p := &buildPathConfig{method: PATCH, path: path}
-	registerHandlers(s.mux, p.build(), handlers...)
+	s.registerHandlers(p.build(), handlers...)
 }
 
-func (s Server) Delete(path string, handlers ...HanlderFunc) {
+func (s *Server) Delete(path string, handlers ...HanlderFunc) {
 	p := &buildPathConfig{method: DELETE, path: path}
-	registerHandlers(s.mux, p.build(), handlers...)
+	s.registerHandlers(p.build(), handlers...)
 }
 
-func (s Server) Group(prefix string) Router {
-	g := &Group{app: &s, prefix: prefix}
+func (s *Server) Group(prefix string) Router {
+	g := &Group{app: s, prefix: prefix}
 	return g
+}
+
+func (s *Server) toggleReady() {
+	s.ready = true
+}
+
+func (s *Server) logger(r *http.Request) {
+	logf("\n[%v] %v on %v", r.Method, r.URL.Path, time.Now().Format(time.UnixDate))
 }
