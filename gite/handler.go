@@ -12,20 +12,25 @@ type Ctx struct {
 
 type HanlderFunc func(ctx Ctx)
 
-func registerHandlers(mux *http.ServeMux, path string, handlers ...HanlderFunc) {
+func (s *Server) registerHandlers(path string, handlers ...HanlderFunc) {
 	reportRegisteredHandlers(path, len(handlers))
-	mux.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
-		shuouldGoNext := false
+	s.mux.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
+		if s.config.Logging {
+			s.logger(r)
+		}
+
+		next := false
+
 		for _, handler := range handlers {
 			handler(Ctx{
 				Response: w,
 				Request:  r,
 				NextFunc: func() {
-					shuouldGoNext = true
+					next = true
 				},
 			})
 
-			if shuouldGoNext {
+			if next {
 				continue
 			} else {
 				break
