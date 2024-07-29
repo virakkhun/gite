@@ -2,13 +2,11 @@ package gite
 
 import (
 	"net/http"
-	"time"
 )
 
 type Server struct {
 	mux    *http.ServeMux
 	config Config
-	ready  bool
 }
 
 type Router interface {
@@ -48,12 +46,4 @@ func (s *Server) Delete(path string, handlers ...HanlderFunc) {
 func (s *Server) Group(prefix string) Router {
 	g := &Group{app: s, prefix: prefix}
 	return g
-}
-
-func (s *Server) toggleReady() {
-	s.ready = true
-}
-
-func (s *Server) logger(r *http.Request) {
-	logf("\n[%v] %v on %v", r.Method, r.URL.Path, time.Now().Format(time.UnixDate))
 }

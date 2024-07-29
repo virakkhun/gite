@@ -10,19 +10,19 @@ type Ctx struct {
 	NextFunc func()
 }
 
-type HanlderFunc func(ctx Ctx)
+type HanlderFunc func(ctx *Ctx)
 
 func (s *Server) registerHandlers(path string, handlers ...HanlderFunc) {
 	reportRegisteredHandlers(path, len(handlers))
 	s.mux.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
 		if s.config.Logging {
-			s.logger(r)
+			logger(r)
 		}
 
 		next := false
 
 		for _, handler := range handlers {
-			handler(Ctx{
+			handler(&Ctx{
 				Response: w,
 				Request:  r,
 				NextFunc: func() {
