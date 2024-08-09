@@ -5,9 +5,9 @@ import (
 )
 
 type Config struct {
-	Logging bool
-	Port    string
 	OnServe func(port string)
+	Port    string
+	Logging bool
 }
 
 func New(c *Config) *Server {
