@@ -5,9 +5,16 @@
 - support route grouping
 - support middleware
 
-#### prerequisite
+#### getting started
 
-- go 1.22.5
+to get started, you will need `go 1.22.5` or later.
+visit [go download page](https://go.dev/dl/)
+
+init your project by,
+`go mod init github.com/your/repo`
+
+and then get `gite` lib
+`go get github.com/virakkhun/gite@v0.0.1-beta`
 
 #### basic routing
 
@@ -22,6 +29,7 @@ import (
 )
 
 func main() {
+  // config the app by passing the struct
 	app := gite.New(&gite.Config{
 		Port:    "3000",
 		Logging: true,
@@ -30,22 +38,41 @@ func main() {
 		},
 	})
 
+  // route to localhost:3000
+  // get json value back
+  // GET /
 	app.Get("/", func(ctx gite.Ctx) {
 		ctx.Json("Hello World")
 	})
 
+  // grouping for user
 	user := app.Group("/user")
-	user.Get("/", func(ctx gite.Ctx) {
+
+  // middleware
+  testMiddleware := func(ctx gite.Ctx) {
 		if ctx.Request.URL.Path == "/user/detail" {
 			http.NotFound(ctx.Response, ctx.Request)
 			return
 		}
 
 		ctx.NextFunc()
-	}, func(ctx gite.Ctx) {
+	}
+
+  // route to /user/
+  // GET /user/
+	user.Get("/", testMiddleware, func(ctx gite.Ctx) {
 		ctx.Status(http.StatusOK).Text("Hello bro")
 	})
 
+  // serve the application
 	log.Fatal(app.Serve())
 }
 ```
+
+---
+
+# 🧾 License
+
+MIT License
+
+Copyright (c) 2024 Virak Khun
