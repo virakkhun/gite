@@ -22,7 +22,7 @@ and then get `gite` lib
 package main
 
 import (
-  "gite/gite"
+  "github.com/virakkhun/gite"
   "log"
   "http"
 )
@@ -60,12 +60,12 @@ func main() {
 
   // GET /user/{id}
   // add middleware
-	user.Get("/{id}", testMiddleware, func(ctx gite.Ctx) {
+  user.Get("/{id}", middleware, func(ctx *gite.Ctx) {
 		ctx.Status(http.StatusOK).Text("Hello bro")
-	})
+  })
 
   // serve the application
-	log.Fatal(app.Serve())
+  log.Fatal(app.Serve())
 }
 ```
 
