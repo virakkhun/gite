@@ -22,45 +22,45 @@ and then get `gite` lib
 package main
 
 import (
-	"encoding/json"
-	"gite/gite"
-	"log"
-	"net/http"
+  "gite/gite"
+  "log"
+  "http"
 )
 
 func main() {
   // config the app by passing the struct
-	app := gite.New(&gite.Config{
-		Port:    "3000",
-		Logging: true,
-		OnServe: func(port string) {
-			fmt.Printf("Server is listening on port %v\n", port)
-		},
-	})
+  app := gite.New(&gite.Config{
+    Port: "3000",
+    Logging: true
+  })
 
-  // route to localhost:3000
-  // get json value back
-  // GET /
-	app.Get("/", func(ctx gite.Ctx) {
-		ctx.Json("Hello World")
-	})
+  // GET /hello
+  app.Get("/hello", func(ctx *gite.Ctx) {
+    ctx.Json("Hello, world!!")
+  })
 
-  // grouping for user
-	user := app.Group("/user")
+  // create grouping
+  user := app.Group("/user")
+
+  // GET /user/{id}
+  user.Get("/{id}", func(ctx *gite.Ctx) {
+    ctx.Json(ctx.FromPath("id"))
+  })
 
   // middleware
-  testMiddleware := func(ctx gite.Ctx) {
-		if ctx.Request.URL.Path == "/user/detail" {
-			http.NotFound(ctx.Response, ctx.Request)
-			return
-		}
+  // need to return and call NextFunc for middleware
+  middleware := func(ctx *gite.Ctx) {
+    if ctx.FromPath("id") == -1 {
+      http.NotFound(ctx.Response, ctx.Request)
+      return
+    }
 
-		ctx.NextFunc()
-	}
+    ctx.NextFunc()
+  }
 
-  // route to /user/
-  // GET /user/
-	user.Get("/", testMiddleware, func(ctx gite.Ctx) {
+  // GET /user/{id}
+  // add middleware
+	user.Get("/{id}", testMiddleware, func(ctx gite.Ctx) {
 		ctx.Status(http.StatusOK).Text("Hello bro")
 	})
 
@@ -68,8 +68,6 @@ func main() {
 	log.Fatal(app.Serve())
 }
 ```
-
----
 
 # 🧾 License
 
