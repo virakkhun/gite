@@ -5,8 +5,17 @@ import (
 )
 
 type Ctx struct {
+	// raw response pass from HTTP hanlder
+	//
+	// @ref https://pkg.go.dev/net/http#ResponseWriter
 	Response http.ResponseWriter
-	Request  *http.Request
+	// raw request pass from HTTP hanlder
+	//
+	// @ref https://pkg.go.dev/net/http#Request
+	Request *http.Request
+	// NewFunc
+	//
+	// a callback to trigger the next func handler
 	NextFunc func()
 }
 
