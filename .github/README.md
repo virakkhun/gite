@@ -1,22 +1,28 @@
-# gite
+# gite ☘️
 
 - is an minimal go router for create API.
 - providing raw handler from net/http
 - support route grouping
 - support middleware
 
-#### getting started
+# getting started 🧪
 
 to get started, you will need `go 1.22.5` or later.
 visit [go download page](https://go.dev/dl/)
 
-init your project by,
-`go mod init github.com/your/repo`
+init your project
+
+```bash
+go mod init github.com/your/repo
+```
 
 and then get `gite` lib
-`go get github.com/virakkhun/gite@v0.0.1-beta`
 
-#### basic routing
+```bash
+go get github.com/virakkhun/gite@v0.0.1-beta
+```
+
+# basic routing 🪢
 
 ```go
 package main
@@ -61,7 +67,7 @@ func main() {
   // GET /user/{id}
   // add middleware
   user.Get("/{id}", middleware, func(ctx *gite.Ctx) {
-		ctx.Status(http.StatusOK).Text("Hello bro")
+    ctx.Status(http.StatusOK).Text("Hello bro")
   })
 
   // serve the application
