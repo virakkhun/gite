@@ -3,6 +3,7 @@ package gite
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 )
 
 // Response interface contains Json, Text and Status method.
@@ -21,7 +22,7 @@ type Response interface {
 //	  "Hello": "World"
 //	})
 func (r *Ctx) Json(data interface{}) {
-	r.AddHeader(CONTENT_TYPE, APPLICATION_JSON)
+	r.AddHeader(content_type, application_json)
 	json.NewEncoder(r.Response).Encode(data)
 }
 
@@ -73,4 +74,24 @@ func (r *Ctx) GetHeader(key string) string {
 func (r *Ctx) Status(statusCode int) Response {
 	r.Response.WriteHeader(statusCode)
 	return r
+}
+
+func (r *Ctx) ThrowNotFound() {
+	http.NotFound(r.Response, r.Request)
+}
+
+func (r *Ctx) ThrowBadRequest() {
+	r.Status(http.StatusBadRequest).Text("Bad request")
+}
+
+func (r *Ctx) ThrowUnauthorized() {
+	r.Status(http.StatusUnauthorized).Text("Unauthorized")
+}
+
+func (r *Ctx) ThrowUnprocessableEntity() {
+	r.Status(http.StatusUnprocessableEntity).Text("Unprocessable entity")
+}
+
+func (r *Ctx) ThrowInternalServerError() {
+	r.Status(http.StatusInternalServerError).Text("Internal server error")
 }

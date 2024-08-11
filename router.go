@@ -19,27 +19,27 @@ type Router interface {
 }
 
 func (s *Server) Get(path string, hanlders ...HanlderFunc) {
-	p := &buildPathConfig{method: GET, path: path}
+	p := &buildPathConfig{method: get, path: path}
 	s.registerHandlers(p.build(), hanlders...)
 }
 
 func (s *Server) Post(path string, handlers ...HanlderFunc) {
-	p := &buildPathConfig{method: POST, path: path}
+	p := &buildPathConfig{method: post, path: path}
 	s.registerHandlers(p.build(), handlers...)
 }
 
 func (s *Server) Put(path string, handlers ...HanlderFunc) {
-	p := &buildPathConfig{method: PUT, path: path}
+	p := &buildPathConfig{method: put, path: path}
 	s.registerHandlers(p.build(), handlers...)
 }
 
 func (s *Server) Patch(path string, handlers ...HanlderFunc) {
-	p := &buildPathConfig{method: PATCH, path: path}
+	p := &buildPathConfig{method: patch, path: path}
 	s.registerHandlers(p.build(), handlers...)
 }
 
 func (s *Server) Delete(path string, handlers ...HanlderFunc) {
-	p := &buildPathConfig{method: DELETE, path: path}
+	p := &buildPathConfig{method: delete, path: path}
 	s.registerHandlers(p.build(), handlers...)
 }
 

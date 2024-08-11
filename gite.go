@@ -16,7 +16,9 @@ func New(c *Config) *Server {
 }
 
 func (s *Server) Serve() error {
-	s.config.OnServe(s.config.Port)
+	if s.config.OnServe != nil {
+		s.config.OnServe(s.config.Port)
+	}
 	e := http.ListenAndServe(join(":", s.config.Port), s.mux)
 	return e
 }
