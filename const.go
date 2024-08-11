@@ -1,11 +1,11 @@
 package gite
 
 const (
-	GET              = "GET"
-	POST             = "POST"
-	PATCH            = "PATCH"
-	PUT              = "PUT"
-	DELETE           = "DELETE"
-	CONTENT_TYPE     = "content-type"
-	APPLICATION_JSON = "application/json"
+	get              = "GET"
+	post             = "POST"
+	patch            = "PATCH"
+	put              = "PUT"
+	delete           = "DELETE"
+	content_type     = "content-type"
+	application_json = "application/json"
 )

@@ -5,7 +5,7 @@ import (
 )
 
 func TestBuildPath(t *testing.T) {
-	get := &buildPathConfig{method: GET}
+	get := &buildPathConfig{method: get}
 	result := get.build()
 
 	if result != "GET /" {
@@ -13,14 +13,14 @@ func TestBuildPath(t *testing.T) {
 	}
 	t.Logf(`build %v success`, result)
 
-	post := &buildPathConfig{method: POST}
+	post := &buildPathConfig{method: post}
 	postResult := post.build()
 	if postResult != "POST /" {
 		t.Fatal(`failed to build POST /`)
 	}
 	t.Logf(`build %v success`, postResult)
 
-	patch := &buildPathConfig{method: PATCH, path: "/{userId}"}
+	patch := &buildPathConfig{method: patch, path: "/{userId}"}
 	patchResult := patch.build()
 	if patchResult != "PATCH /{userId}" {
 		t.Fatal(`failed to build PATCH /`)
@@ -34,7 +34,7 @@ func TestBuildGroupPath(t *testing.T) {
 	result := get.buildGroup()
 
 	if result != expected {
-		t.Fatalf("failed to build group GET /user/")
+		t.Fatalf("failed to build group GET /user/, get %v", result)
 	}
 
 	t.Logf(`build group %v success`, result)
@@ -44,7 +44,7 @@ func TestBuildGroupPath(t *testing.T) {
 	postResult := post.buildGroup()
 
 	if postExpected != postResult {
-		t.Fatalf("failed to build group GET /user/")
+		t.Fatalf("failed to build group POST /user/, get %v", postResult)
 	}
 
 	t.Logf(`build group %v success`, postResult)
@@ -54,7 +54,7 @@ func TestBuildGroupPath(t *testing.T) {
 	putResult := put.buildGroup()
 
 	if putExpected != putResult {
-		t.Fatalf("failed to build group GET /user/")
+		t.Fatalf("failed to build group PUT /user/{id}, get %v", putResult)
 	}
 
 	t.Logf(`build group %v success`, putResult)
